@@ -1,8 +1,10 @@
+%%writefile app.py
 import streamlit as st
 import git
 import os
 import shutil
 import json
+import tempfile
 import google.generativeai as genai
 import chromadb
 
@@ -27,7 +29,7 @@ def chunk_text(text, chunk_size=800, overlap=100):
 if st.button("Load Repo") and api_key and repo_url:
     genai.configure(api_key=api_key)
     with st.spinner("Cloning repo..."):
-        clone_dir = "/content/streamlit_repo"
+        clone_dir = os.path.join(tempfile.gettempdir(), "streamlit_repo")
         if os.path.exists(clone_dir):
             shutil.rmtree(clone_dir)
         git.Repo.clone_from(repo_url, clone_dir)
